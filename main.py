@@ -22,15 +22,17 @@ class Passenger:
         self.phone=phone
         self.bus=bus
 
-class BusSystem:
+class Busbus_system:
     def __init__(self):
         self.bus_list=[]
         self.passenger_list=[]
+        self.admin = Admin()
 
     def add_bus(self, number, route, seats):
         new_bus = Bus(number,route,seats)
         self.bus_list.append(new_bus)
-    
+        print("Successfully bus added !!!")
+
     def book_ticket(self,bus_number, name, phone):
         if self.bus_list:
             for bus in self.bus_list:
@@ -38,12 +40,12 @@ class BusSystem:
                     if bus.book_seat():
                         passenger = Passenger(name, phone, bus)
                         self.passenger_list.append(passenger)
-                        print("Ticket Booked !!!")
+                        return True
                     else:
                         print("No seat Available")
-                    return
+                        return False
         else:
-            print("No Bus Available")       
+            return False     
 
     def show_buses(self):
         if self.bus_list:
@@ -63,9 +65,8 @@ class Admin:
     
 
 
-admin=Admin()
-system=BusSystem()
 
+bus_system=Busbus_system()
 while True:
     print("/---- Main Menu -----/")
     print("- 1. Admin Login")
@@ -73,24 +74,25 @@ while True:
     print("- 3. View Buses")
     print("- 4. Exit")
 
+
     choice = int(input("Enter Your Choice: "))
     if choice == 1:
         username= input("Enter Your Username: ")
         password= input("Enter Your Password: ")
-        if admin.login(username,password):
+        if bus_system.admin.login(username,password):
             while True:
                 print("/---- Admin Menu -----/")
                 print("-- 1. Add Bus")
                 print("-- 2. View All Buses")
                 print("-- 3. Logout")
-                admin_choice= int(input(" Enter your Choice: "))
+                admin_choice= int(input("Enter your Choice: "))
                 if admin_choice == 1:
                         number = input("Bus Number: ")
                         route = input("Route: ")
                         seats = int(input("Total Seats: "))
-                        system.add_bus(number, route, seats)
+                        bus_system.add_bus(number, route, seats)
                 elif admin_choice == 2:
-                    system.show_buses()
+                    bus_system.show_buses()
                 elif admin_choice == 3:
                     break
                 else:
@@ -103,12 +105,14 @@ while True:
         bus_number=input("Enter the Bus Number: ")
         name=input("Enter the Passenger Name: ")
         phone=input("Enter the Passenger phone number: ")
-        system.book_ticket(bus_number,name,phone)
-        print("Ticket Fare 500 tk")
+        if bus_system.book_ticket(bus_number,name,phone):
+            print("Ticket Booked!! your fare is 500 Tk")
+        else:
+            print("Bus Not Found")  
 
     
     elif choice == 3:
-        system.show_buses()
+        bus_system.show_buses()
     
     elif choice == 4:
         break
